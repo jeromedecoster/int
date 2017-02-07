@@ -4,6 +4,9 @@
 	<title>canvas-video</title>
 	<script type="text/javascript" src="canvasvideo.min.js"></script>
 	<style type="text/css">
+	p {
+		margin: 20px;
+	}
 		img, canvas {
 			width: 100%;
 		}
@@ -11,7 +14,11 @@
 	</style>
 </head>
 <body>
-<img asrc="comp.gif">
+<p>Gif animé 12fps <b>2,4Mo</b></p>
+<img>
+<p>Gif converti en mp4 <b>1Mo</b></p>
+<p>ffmpeg -i 12fps.gif -vcodec libx264 -pix_fmt yuv420p -profile:v baseline -preset slower -crf 18 -vf scale=trunc\(iw/2\)*2:trunc\(ih/2\)*2 12fps.mp4</p>
+<p><a href="https://github.com/84Paris/canvasvideo.js" target="_blank">canvasvideo.js</a></p>
 
 <script type="text/javascript">
 var options = {
