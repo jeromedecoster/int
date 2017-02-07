@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>canvas-video</title>
+	<script type="text/javascript" src="canvasvideo.min.js"></script>
+	<style type="text/css">
+		img, canvas {
+			width: 100%;
+		}
+
+	</style>
+</head>
+<body>
+<img asrc="comp.gif">
+
+<script type="text/javascript">
+var options = {
+    xhr: true,
+    fps: 12,
+    loop: true,
+    // bufferTime: 6,
+    // audio: false,
+    // preload: true,
+    // autoplay: true
+}
+	var video = new CanvasVideo('./12fps.mp4', options);
+	
+	video.addEventListener('canplaythrough', onLoaded);
+	video.load();
+
+	function onLoaded(e)
+	{
+	    document.body.appendChild(video.element);
+	    document.querySelector('img').src = '12fps.gif'
+	    if (!video.needTouch) video.play();
+	    else document.body.addEventListener('touchend', playVideo);
+	}
+
+	function playVideo()
+	{
+	    video.play();
+	}
+
+
+	var video2 = new CanvasVideo('./12fps.mp4', options);
+	
+	video2.addEventListener('canplaythrough', onLoaded2);
+	video2.load();
+
+	function onLoaded2(e)
+	{
+	    document.body.appendChild(video2.element);
+	    if (!video2.needTouch) video2.play();
+	    else document.body.addEventListener('touchend', playVideo2);
+	}
+
+	function playVideo()
+	{
+	    video2.play();
+	}
+
+	var video3 = new CanvasVideo('./12fps.mp4', options);
+	
+	video3.addEventListener('canplaythrough', onLoaded3);
+	video3.load();
+
+	function onLoaded3(e)
+	{
+	    document.body.appendChild(video3.element);
+	    if (!video3.needTouch) video3.play();
+	    else document.body.addEventListener('touchend', playVideo3);
+	}
+
+	function playVideo()
+	{
+	    video3.play();
+	}
+
+	var video4 = new CanvasVideo('./12fps.mp4', options);
+	
+	video4.addEventListener('canplaythrough', onLoaded4);
+	video4.load();
+
+	function onLoaded4(e)
+	{
+	    document.body.appendChild(video4.element);
+	    if (!video4.needTouch) video4.play();
+	    else document.body.addEventListener('touchend', playVideo4);
+	}
+
+	function playVideo()
+	{
+	    video4.play();
+	}
+</script>
+</body>
+</html>
