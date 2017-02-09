@@ -2,103 +2,156 @@
 <html>
 <head>
 	<title>canvas-video</title>
-	<script type="text/javascript" src="canvasvideo.min.js"></script>
+	<script type="text/javascript" src="mobile-detect.min.js"></script>
+  <script type="text/javascript" src="canvasvideo.min.js"></script>
 	<style type="text/css">
-	p {
-		margin: 20px;
-	}
-		img, canvas {
+    body {
+      font-family: monospace;
+      font-size: 1.25rem;
+      margin: 1rem;
+    }
+    h2 {
+      margin: 0;
+    }
+    ul {
+      padding-left: 1rem;
+    }
+    li {
+      padding: .125rem 0;
+    }
+		.bash {
+      background-color: #eeeeee;
+      padding: 1rem;
+    }
+    .type b {
+      color: #f00000;
+    }
+    img, canvas, video {
 			width: 100%;
 		}
-
+    .total {
+      margin: 2rem 0;
+    }
 	</style>
 </head>
 <body>
-<p>Gif animé 12fps <b>2,4Mo</b></p>
-<img>
-<p>Gif converti en mp4 <b>1Mo</b></p>
-<p>ffmpeg -i 12fps.gif -vcodec libx264 -pix_fmt yuv420p -profile:v baseline -preset slower -crf 18 -vf scale=trunc\(iw/2\)*2:trunc\(ih/2\)*2 12fps.mp4</p>
-<p><a href="https://github.com/84Paris/canvasvideo.js" target="_blank">canvasvideo.js</a></p>
+
+<h2>Play inline muted mp4 videos</h2>
+<ul>
+  <li>Fallback with <a href="https://github.com/84Paris/canvasvideo.js" target="_blank">canvasvideo.js</a> on iOS 9</li>
+  <li>Fallback with GIF on iOS ≤ 8</li>
+</ul>
+<p class="bash">ffmpeg -i 12fps.gif -vcodec libx264 -pix_fmt yuv420p -profile:v baseline -preset slower -crf 18 -vf scale=trunc\(iw/2\)*2:trunc\(ih/2\)*2 12fps.mp4</p>
+
+<p class="type"></p>
+
+<div class='vdo-1'>
+  <h4>Video #1</h4>
+  <ul>
+    <li>Gif 2,4Mo</li>
+    <li>Mp4 &nbsp; 1Mo</li>
+  </ul>
+</div>
+
+<div class='vdo-2'>
+  <h4>Video #2</h4>
+  <ul>
+    <li>Gif 453ko</li>
+    <li>Mp4 530ko</li>
+  </ul>
+</div>
+
+<div class='vdo-3'>
+  <h4>Video #3</h4>
+  <ul>
+    <li>Gif 811ko</li>
+    <li>Mp4  &nbsp;70ko</li>
+  </ul>
+</div>
+
+<div class='vdo-4'>
+  <h4>Video #4</h4>
+  <ul>
+    <li>Gif 440ko</li>
+    <li>Mp4 267ko</li>
+  </ul>
+</div>
+
+<div class='vdo-5'>
+  <h4>Video #5</h4>
+  <ul>
+    <li>Gif 999ko</li>
+    <li>Mp4 472ko</li>
+  </ul>
+</div>
+
+<div class='vdo-6'>
+  <h4>Video #6</h4>
+  <ul>
+    <li>Gif 2,1Mo</li>
+    <li>Mp4 1,2Mo</li>
+  </ul>
+</div>
+
+<div class="total">
+  <h3>Total weight</h3>
+  <ul>
+    <li>Gif 7,2Mo</li>
+    <li>Mp4 3,6Mo</li>
+  </ul>
+</div>
 
 <script type="text/javascript">
-var options = {
-    xhr: true,
-    fps: 12,
-    loop: true,
-    // bufferTime: 6,
-    // audio: false,
-    // preload: true,
-    // autoplay: true
-}
-	var video = new CanvasVideo('./12fps.mp4', options);
-	
-	video.addEventListener('canplaythrough', onLoaded);
-	video.load();
 
-	function onLoaded(e)
-	{
-	    document.body.appendChild(video.element);
-	    document.querySelector('img').src = '12fps.gif'
-	    if (!video.needTouch) video.play();
-	    else document.body.addEventListener('touchend', playVideo);
-	}
+  // detect type
+  var md = new MobileDetect(window.navigator.userAgent)
+  var type = 'video'
+  if (md.os() === 'iOS') {
+    var version = md.version('iOS')
+    if (version < 9) {
+      type = 'gif'
+    }
+    else if (version < 10) {
+      type = 'canvas'
+    }
+  }
 
-	function playVideo()
-	{
-	    video.play();
-	}
+  document.querySelector('.type').innerHTML = 'Version chosen, based on your system: <b>' + type + '</b>'
 
+  function create(data) {
+    var el
+    if (type === 'gif') {
+      el = document.createElement('img')
+      el.src = data.gif
+    }
+    else if (type === 'canvas') {
+      var options = {
+        xhr: true,
+        fps: 12,
+        loop: true,
+        autoplay: true
+      }
+      var video = new CanvasVideo(data.mp4, options)
+      el = video.element
+    }
+    else if (type === 'video') {
+      el = document.createElement('video')
+      'autoplay muted playsinline loop'.split(' ').forEach(function(attr) {
+        el.setAttribute(attr, '')
+      })
+      el.src = data.mp4
+    }
+    return el
+  }
 
-	var video2 = new CanvasVideo('./12fps.mp4', options);
-	
-	video2.addEventListener('canplaythrough', onLoaded2);
-	video2.load();
-
-	function onLoaded2(e)
-	{
-	    document.body.appendChild(video2.element);
-	    if (!video2.needTouch) video2.play();
-	    else document.body.addEventListener('touchend', playVideo2);
-	}
-
-	function playVideo()
-	{
-	    video2.play();
-	}
-
-	var video3 = new CanvasVideo('./12fps.mp4', options);
-	
-	video3.addEventListener('canplaythrough', onLoaded3);
-	video3.load();
-
-	function onLoaded3(e)
-	{
-	    document.body.appendChild(video3.element);
-	    if (!video3.needTouch) video3.play();
-	    else document.body.addEventListener('touchend', playVideo3);
-	}
-
-	function playVideo()
-	{
-	    video3.play();
-	}
-
-	var video4 = new CanvasVideo('./12fps.mp4', options);
-	
-	video4.addEventListener('canplaythrough', onLoaded4);
-	video4.load();
-
-	function onLoaded4(e)
-	{
-	    document.body.appendChild(video4.element);
-	    if (!video4.needTouch) video4.play();
-	    else document.body.addEventListener('touchend', playVideo4);
-	}
-
-	function playVideo()
-	{
-	    video4.play();
-	}
+  for (var i = 1; i <= 6; i++) {
+    var name = './12fps-' + i
+    var el = create({
+      gif: name + '.gif',
+      mp4: name + '.mp4'
+    })
+    if (el) document.querySelector('.vdo-' + i).appendChild(el)
+  }
 </script>
 </body>
 </html>
